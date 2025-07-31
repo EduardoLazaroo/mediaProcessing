@@ -1,6 +1,7 @@
 from extract_frames import extract_frames
 from extract_audio import extract_audio
 from transcribe_audio import transcribe
+from analyze_frames import main as analisar_frames
 
 video_path = "assets/video.mp4"
 frames_output_dir = "outputs/frames"
@@ -16,4 +17,5 @@ extract_audio(video_path, audio_output_path)
 print("🗣️ Iniciando transcrição com Whisper...")
 transcribe(audio_output_path, transcription_output_path)
 
-print("✅ Fase 2 finalizada com sucesso.")
+print("🧠 Iniciando análise visual dos frames...")
+analisar_frames()
