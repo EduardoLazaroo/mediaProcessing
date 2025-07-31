@@ -10,6 +10,10 @@ TRANSCRIPTION_PATH = "outputs/transcription.txt"
 TEXT_ANALYSIS_PATH = "outputs/analysis.json"
 FRAMES_PATH = "outputs/frames"
 FRAMES_ANALYSIS_PATH = "outputs/frames_analysis.json"
+MULTIMODAL_PATH = "outputs/multimodal_understanding.json"
+INSIGHTS_PATH = "outputs/insights.json"
+SCRIPT_PATH = "outputs/dubbing_script.txt"
+AUDIO_PATH = "outputs/dubbing_audio.mp3"
 
 st.title("📽️ Análise Multimodal de Vídeo com IA")
 
@@ -59,9 +63,63 @@ if os.path.exists(FRAMES_ANALYSIS_PATH):
 
     if os.path.exists(frame_path):
         st.image(Image.open(frame_path), caption=selected_frame, use_container_width=True)
-        st.markdown("**Descrição Visual:**")
-        st.write(frames_analysis.get(selected_frame, "Sem análise disponível."))
+        with st.expander("Descrição Visual Completa"):
+            st.write(frames_analysis.get(selected_frame, "Sem análise disponível."))
     else:
         st.warning("Imagem do frame não encontrada.")
 else:
     st.warning("Arquivo de análise visual não encontrado.")
+
+st.markdown("---")
+
+# --- Etapa 6: Compreensão Multimodal ---
+st.subheader("🧠 Compreensão Multimodal")
+
+if os.path.exists(MULTIMODAL_PATH):
+    with open(MULTIMODAL_PATH, "r", encoding="utf-8") as f:
+        multimodal = json.load(f)
+
+    resumo_geral = str(multimodal.get("resumo", "")).replace("\n", " ").strip()
+    st.markdown(f"**Resumo Geral:** {resumo_geral}")
+    
+    st.markdown("**Correlação entre Texto e Imagem:**")
+    for item in multimodal.get("correlacoes", []):
+        st.markdown(f"- {str(item).strip()}")
+else:
+    st.warning("Compreensão multimodal não encontrada.")
+
+st.markdown("---")
+
+# --- Etapa 7: Geração de Insights ---
+st.subheader("💡 Insights Inteligentes")
+
+if os.path.exists(INSIGHTS_PATH):
+    with open(INSIGHTS_PATH, "r", encoding="utf-8") as f:
+        insights = json.load(f)
+
+    insights_text = insights.get("insights", "")
+    st.markdown(insights_text, unsafe_allow_html=True)
+else:
+    st.warning("Arquivo de insights não encontrado.")
+
+st.markdown("---")
+
+# --- Etapa 8: Script de Dublagem ---
+st.subheader("🗣️ Script de Dublagem")
+
+if os.path.exists(SCRIPT_PATH):
+    with open(SCRIPT_PATH, "r", encoding="utf-8") as f:
+        script = f.read()
+    st.markdown(f"```\n{script}\n```")
+else:
+    st.warning("Script de dublagem não encontrado.")
+
+st.markdown("---")
+
+# --- Etapa 9: Áudio Gerado com TTS ---
+st.subheader("🔊 Áudio Gerado")
+
+if os.path.exists(AUDIO_PATH):
+    st.audio(AUDIO_PATH)
+else:
+    st.warning("Áudio de dublagem ainda não gerado.")
