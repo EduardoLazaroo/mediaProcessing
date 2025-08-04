@@ -2,6 +2,7 @@ import streamlit as st
 import os
 import json
 from PIL import Image
+import subprocess
 
 st.set_page_config(page_title="Análise Multimodal de Vídeo", layout="wide")
 
@@ -16,6 +17,23 @@ SCRIPT_PATH = "outputs/dubbing_script.txt"
 AUDIO_PATH = "outputs/dubbing_audio.mp3"
 
 st.title("📽️ Análise Multimodal de Vídeo com IA")
+
+# Função para executar scripts e mostrar output no Streamlit
+def run_script(script_name):
+    with st.spinner(f"Executando {script_name}..."):
+        try:
+            result = subprocess.run(
+                ["python", script_name],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            st.success(f"{script_name} executado com sucesso!")
+            st.text(result.stdout)
+            if result.stderr:
+                st.warning(f"Warnings/errors:\n{result.stderr}")
+        except subprocess.CalledProcessError as e:
+            st.error(f"Erro ao executar {script_name}:\n{e.stderr}")
 
 # --- Exibe o vídeo ---
 st.subheader("🎬 Vídeo Original")
@@ -116,8 +134,50 @@ else:
 
 st.markdown("---")
 
+def run_script(script_name):
+    try:
+        print(f"Iniciando execução de: {script_name}")
+        result = subprocess.run(["python", script_name], capture_output=True, text=True)
+        print("STDOUT:\n", result.stdout)
+        print("STDERR:\n", result.stderr)
+        return result.returncode == 0
+    except Exception as e:
+        print("Erro ao executar script:", e)
+        return False
+
+# --- Botão para gerar áudio da dublagem ---
+if st.button("Gerar áudio da dublagem"):
+    st.write("Iniciando geração do áudio da dublagem...")
+    print("Botão de dublagem clicado")
+
+    success = run_script("generate_dubbing_audio.py")
+
+    if success:
+        st.success("Áudio gerado com sucesso!")
+        print("Script de dublagem executado com sucesso.")
+    else:
+        st.error("Erro ao gerar o áudio.")
+        print("Script de dublagem falhou.")
+
+    st.rerun()
+
+st.markdown("---")
+
+# --- Botão para reprocessar todas análises ---
+if st.button("Reprocessar todas análises e gerar artefatos"):
+    run_script("transcribe_audio.py")
+    run_script("analyze_transcription.py")
+    run_script("analyze_frames.py")
+    run_script("multimodal_understanding.py")
+    run_script("generate_insights.py")
+    run_script("generate_dubbing_script.py")
+    st.success("Reprocessamento completo!")
+    st.rerun()
+
+st.markdown("---")
+
 # --- Etapa 9: Áudio Gerado com TTS ---
-st.subheader("🔊 Áudio Gerado")
+st.subheader("Áudio Gerado")
 
 if os.path.exists(AUDIO_PATH):
     st.audio(AUDIO_PATH)

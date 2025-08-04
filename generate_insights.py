@@ -35,7 +35,7 @@ def main():
     insights = gerar_insights(analise)
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         json.dump({"insights": insights}, f, ensure_ascii=False, indent=2)
-    print(f"✅ Insights gerados em {OUTPUT_PATH}")
+    print(f"Insights gerados em {OUTPUT_PATH}")
 
 if __name__ == "__main__":
     main()

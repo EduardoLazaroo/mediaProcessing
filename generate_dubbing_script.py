@@ -36,7 +36,7 @@ def main():
     script = gerar_script(insights)
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         f.write(script)
-    print(f"✅ Script de dublagem salvo em {OUTPUT_PATH}")
+    print(f"Script de dublagem salvo em {OUTPUT_PATH}")
 
 if __name__ == "__main__":
     main()

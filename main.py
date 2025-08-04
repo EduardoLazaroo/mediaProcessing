@@ -8,14 +8,14 @@ frames_output_dir = "outputs/frames"
 audio_output_path = "outputs/audio.mp3"
 transcription_output_path = "outputs/transcription.txt"
 
-print("🎬 Iniciando extração de vídeo...")
+print("Iniciando extração de vídeo...")
 extract_frames(video_path, frames_output_dir)
 
-print("🎧 Iniciando extração de áudio...")
+print("Iniciando extração de áudio...")
 extract_audio(video_path, audio_output_path)
 
-print("🗣️ Iniciando transcrição com Whisper...")
+print("Iniciando transcrição com Whisper...")
 transcribe(audio_output_path, transcription_output_path)
 
-print("🧠 Iniciando análise visual dos frames...")
+print("Iniciando análise visual dos frames...")
 analisar_frames()

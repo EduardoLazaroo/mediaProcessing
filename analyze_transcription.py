@@ -39,20 +39,30 @@ Responda apenas com JSON válido.
     return response.choices[0].message.content.strip()
 
 def salvar_analise(analise_json):
-    with open(ANALYSIS_OUTPUT_PATH, "w", encoding="utf-8") as f:
-        f.write(analise_json)
+    # Remove delimitadores de bloco de código, se existirem
+    if analise_json.startswith("```"):
+        analise_json = analise_json.split("```")[1].strip()
+    # Tenta extrair apenas o JSON válido
+    try:
+        analise_dict = json.loads(analise_json)
+        with open(ANALYSIS_OUTPUT_PATH, "w", encoding="utf-8") as f:
+            json.dump(analise_dict, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print("Erro ao salvar análise:", e)
+        with open(ANALYSIS_OUTPUT_PATH, "w", encoding="utf-8") as f:
+            f.write("")  # Salva vazio para evitar erro no Streamlit
 
 def main():
-    print("📖 Lendo transcrição...")
+    print("Lendo transcrição...")
     texto = carregar_transcricao(TRANSCRIPTION_PATH)
 
-    print("🧠 Analisando com GPT-4o...")
+    print("Analisando com GPT-4o...")
     analise = analisar_transcricao(texto)
 
-    print("💾 Salvando análise em outputs/analysis.json")
+    print("Salvando análise em outputs/analysis.json")
     salvar_analise(analise)
 
-    print("✅ Fase 3 finalizada com sucesso.")
+    print("Fase 3 finalizada com sucesso.")
 
 if __name__ == "__main__":
     main()

@@ -26,7 +26,7 @@ def gerar_compreensao(transcricao, frames):
     prompt = (
         "A seguir temos a transcrição de um vídeo e a descrição visual de seus frames. "
         "Faça uma análise combinada do conteúdo, identificando o contexto, intenções dos personagens, mensagens implícitas e possíveis interpretações.\n\n"
-        f"📝 Transcrição:\n{transcricao}\n\n🖼️ Descrição dos frames:\n{frames_descricao}"
+        f"Transcrição:\n{transcricao}\n\nDescrição dos frames:\n{frames_descricao}"
     )
 
     response = client.chat.completions.create(
@@ -42,7 +42,7 @@ def main():
     analise_combinada = gerar_compreensao(transcricao, frames)
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         json.dump({"compreensao_multimodal": analise_combinada}, f, ensure_ascii=False, indent=2)
-    print(f"✅ Análise multimodal salva em {OUTPUT_PATH}")
+    print(f"Análise multimodal salva em {OUTPUT_PATH}")
 
 if __name__ == "__main__":
     main()
